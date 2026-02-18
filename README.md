@@ -17,3 +17,6 @@ There is two function in main, that have to be run to create and time, and one t
 ```bash
 python main.py
 ```
+
+remember to run this before handing in, to generate requirement.txt file
+uv export --format requirements-txt > requirements.txt
