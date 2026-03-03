@@ -16,7 +16,6 @@ def viz():
 
 
 # lecture 1 naive algorithm for mandelbrot set
-@profile
 def mandelbrot_naive(
     xmin: float,
     xmax: float,
@@ -55,7 +54,6 @@ def mandelbrot_naive(
 
 
 # lecture 2 vectorized algorithm for mandelbrot set
-@profile
 def compute_mandelbrot_numpy(
     xmin, xmax, ymin, ymax, width, height, max_iter, show=False
 ):
@@ -148,13 +146,9 @@ def compute_mandelbrot_naive_numba(
 
 
 @njit
-def compute_mandelbrot_numba_typed(
-    xmin, xmax, ymin, ymax, width, height, max_iter, use_float32=False
-):
-    dtype = np.float32 if use_float32 else np.float64
-    x = np.linspace(xmin, xmax, width).astype(dtype)
-    y = np.linspace(ymin, ymax, height).astype(dtype)
-
+def compute_mandelbrot_numba_float64(xmin, xmax, ymin, ymax, width, height, max_iter):
+    x = np.linspace(xmin, xmax, width)
+    y = np.linspace(ymin, ymax, height)
     result = np.zeros((height, width), dtype=np.int32)
 
     for i in range(height):
@@ -166,9 +160,43 @@ def compute_mandelbrot_numba_typed(
                 z = z * z + c
                 n += 1
             result[i, j] = n
+
     return result
 
 
-if __name__ == "__main__":
-    mandelbrot_naive(-2, 1, -1.5, 1.5, 512, 512, 100)
-    compute_mandelbrot_numpy(-2, 1, -1.5, 1.5, 512, 512, 100)
+@njit
+def compute_mandelbrot_numba_float32(xmin, xmax, ymin, ymax, width, height, max_iter):
+    x = np.linspace(xmin, xmax, width).astype(np.float32)
+    y = np.linspace(ymin, ymax, height).astype(np.float32)
+    result = np.zeros((height, width), dtype=np.int32)
+
+    for i in range(height):
+        for j in range(width):
+            c = x[j] + 1j * y[i]
+            z = 0j
+            n = 0
+            while n < max_iter and (z.real * z.real + z.imag * z.imag) <= 4.0:
+                z = z * z + c
+                n += 1
+            result[i, j] = n
+
+    return result
+
+
+@njit
+def compute_mandelbrot_numba_float16(xmin, xmax, ymin, ymax, width, height, max_iter):
+    x = np.linspace(xmin, xmax, width).astype(np.float16)
+    y = np.linspace(ymin, ymax, height).astype(np.float16)
+    result = np.zeros((height, width), dtype=np.int32)
+
+    for i in range(height):
+        for j in range(width):
+            c = x[j] + 1j * y[i]
+            z = 0j
+            n = 0
+            while n < max_iter and (z.real * z.real + z.imag * z.imag) <= 4.0:
+                z = z * z + c
+                n += 1
+            result[i, j] = n
+
+    return result

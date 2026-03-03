@@ -6,7 +6,9 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "ipykernel>=7.2.0",
+    "line-profiler>=5.0.2",
     "matplotlib>=3.10.8",
+    "numba>=0.64.0",
     "numpy>=2.4.2",
     "pandas>=3.0.1",
 ]
