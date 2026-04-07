@@ -1,0 +1,119 @@
+{
+  "cluster_mode": "local_emulation",
+  "connect_error": "Timed out trying to connect to tcp://127.0.0.1:8786 after 30 s",
+  "scheduler_address": "tcp://127.0.0.1:8786",
+  "dashboard_link": "http://127.0.0.1:8787/status",
+  "version_check": {
+    "matching_versions": true,
+    "versions_by_worker": {
+      "tcp://127.0.0.1:63656": {
+        "python": "3.12.10",
+        "dask": "2026.3.0",
+        "numpy": "2.4.2",
+        "numba": "0.64.0"
+      },
+      "tcp://127.0.0.1:63659": {
+        "python": "3.12.10",
+        "dask": "2026.3.0",
+        "numpy": "2.4.2",
+        "numba": "0.64.0"
+      },
+      "tcp://127.0.0.1:63662": {
+        "python": "3.12.10",
+        "dask": "2026.3.0",
+        "numpy": "2.4.2",
+        "numba": "0.64.0"
+      }
+    }
+  },
+  "cluster_config": {
+    "scheduler_address": "tcp://127.0.0.1:8786",
+    "dashboard_link": "http://127.0.0.1:8787/status",
+    "n_workers": 3,
+    "cpus_per_vm_estimate": 1
+  },
+  "grid": {
+    "width": 4096,
+    "height": 4096,
+    "max_iter": 120
+  },
+  "numba_baseline": {
+    "median_s": 1.0098238999999012,
+    "min_s": 0.9841421000019182,
+    "max_s": 1.0129180000003544
+  },
+  "chunk_rows": [
+    {
+      "n_chunks": 3,
+      "time_s": 0.8693403999932343,
+      "min_s": 0.8489862000060384,
+      "max_s": 0.8861479000042891
+    },
+    {
+      "n_chunks": 6,
+      "time_s": 0.5808937999972841,
+      "min_s": 0.5641536000039196,
+      "max_s": 0.8682862999994541
+    },
+    {
+      "n_chunks": 12,
+      "time_s": 0.5377512000050046,
+      "min_s": 0.5238411999962409,
+      "max_s": 0.637416999998095
+    },
+    {
+      "n_chunks": 24,
+      "time_s": 0.5670606999992742,
+      "min_s": 0.5564516999947955,
+      "max_s": 0.616096199999447
+    }
+  ],
+  "best_chunk_row": {
+    "n_chunks": 12,
+    "time_s": 0.5377512000050046,
+    "min_s": 0.5238411999962409,
+    "max_s": 0.637416999998095
+  },
+  "local_dask_comparison": {
+    "local_workers": 3,
+    "best_chunks": 12,
+    "remote_time_s": 0.5377512000050046,
+    "local_time_s": 0.5364883999936865,
+    "remote_vs_local_ratio": 1.002353825378765
+  },
+  "worker_scaling_rows": [
+    {
+      "workers": 1,
+      "time_s": 1.1183165999973426,
+      "min_s": 1.0517103000020143,
+      "max_s": 1.2063520000010612,
+      "speedup_vs_1worker": 1.0,
+      "ideal_speedup": 1.0
+    },
+    {
+      "workers": 2,
+      "time_s": 0.5882571000038297,
+      "min_s": 0.5831136999986484,
+      "max_s": 0.8120809000029112,
+      "speedup_vs_1worker": 1.9010677474017093,
+      "ideal_speedup": 2.0
+    },
+    {
+      "workers": 3,
+      "time_s": 0.553179700000328,
+      "min_s": 0.4984411999976146,
+      "max_s": 0.5652435000010883,
+      "speedup_vs_1worker": 2.0216153991129455,
+      "ideal_speedup": 3.0
+    }
+  ],
+  "best_worker_row": {
+    "workers": 3,
+    "time_s": 0.553179700000328,
+    "min_s": 0.4984411999976146,
+    "max_s": 0.5652435000010883,
+    "speedup_vs_1worker": 2.0216153991129455,
+    "ideal_speedup": 3.0
+  },
+  "speedup_vs_numba_baseline": 1.8254898001486721
+}
