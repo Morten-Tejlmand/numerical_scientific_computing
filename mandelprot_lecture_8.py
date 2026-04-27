@@ -19,11 +19,7 @@ def bench(fn, *args, runs=3, warmup=True):
 
 
 def trajectory_divergence(c, max_iter=256):
-    """
-    Track per-iteration |z64 - z32| error for a single point c.
-    Stops early if both paths have escaped (|z| > 2).
-    Returns (path64, path32, errors).
-    """
+    """Track |z64 - z32| error per iteration for a single point c."""
     c64 = np.complex128(c)
     c32 = np.complex64(c)
     z64 = np.complex128(0.0)
@@ -39,7 +35,7 @@ def trajectory_divergence(c, max_iter=256):
         path64.append(z64)
         path32.append(z32)
         errors.append(abs(complex(z64) - complex(z32)))
-        if abs(z64) > 2.0 and abs(z32) > 2.0:
+        if abs(z64) > 2.0 or abs(z32) > 2.0:
             break
 
     return np.array(path64), np.array(path32), np.array(errors)
@@ -52,11 +48,7 @@ def find_first_divergence_iter(errors, epsilon=1e-6):
 
 
 def compute_sensitivity_map(xmin, xmax, ymin, ymax, width, height, max_iter):
-    """
-    Vectorised NumPy: for each grid point accumulate |z64 - z32| over all iterations.
-    Stops accumulating for a pixel once either precision path has escaped.
-    High values mark precision-sensitive regions (typically the boundary).
-    """
+    """Accumulate |z64 - z32| per pixel over all iterations. High values = boundary."""
     x64 = np.linspace(xmin, xmax, width, dtype=np.float64)
     y64 = np.linspace(ymin, ymax, height, dtype=np.float64)
     X64, Y64 = np.meshgrid(x64, y64)
@@ -75,9 +67,9 @@ def compute_sensitivity_map(xmin, xmax, ymin, ymax, width, height, max_iter):
     for _ in range(max_iter):
         z64 = z64 * z64 + C64
         z32 = z32 * z32 + C32
-        diff = np.abs(z64 - z32.astype(np.complex128))
-        accumulated += diff * alive
         alive &= (np.abs(z64) <= 2.0) & (np.abs(z32) <= 2.0)
+        diff = np.nan_to_num(np.abs(z64 - z32.astype(np.complex128)), nan=0.0, posinf=0.0)
+        accumulated += diff * alive
 
     return accumulated
 
@@ -213,11 +205,11 @@ def run_lecture8_study(
     tracker_max_iter=120,
     tracker_path="performance_tracker.csv",
 ):
-    # Milestone 1: single-point trajectory divergence
+    # part 1: trajectory divergence for a single point
     path64, path32, errors = trajectory_divergence(probe_point, max_iter)
     first_drift = find_first_divergence_iter(errors, drift_epsilon)
 
-    # Milestone 2: full-grid sensitivity map
+    # part 2: sensitivity map over the whole grid
     t0 = time.perf_counter()
     sensitivity = compute_sensitivity_map(xmin, xmax, ymin, ymax, width, height, max_iter)
     sens_time_s = time.perf_counter() - t0
